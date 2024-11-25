@@ -28,7 +28,7 @@ Clone the repository:
 
 bash
 Copy code
-git clone https://github.com/your-username/user-authentication-system.git
+git clone https://github.com/Ankit-solulab/-User-Authentication-System.git'
 cd user-authentication-system
 Install dependencies:
 

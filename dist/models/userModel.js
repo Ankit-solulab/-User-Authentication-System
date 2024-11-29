@@ -35,30 +35,27 @@ var __importStar = (this && this.__importStar) || (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-const userSchema = new mongoose_1.Schema({
-    username: {
-        type: String,
-        required: true
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    password: {
-        type: String,
-        required: true,
-    },
-    otpSecret: {
-        type: String,
-    },
-    lastLogin: {
-        type: Date,
-    },
-    ipAddress: {
-        type: String,
-    }
+const LoginHistorySchema = new mongoose_1.Schema({
+    ip: { type: String, required: true },
+    os: { type: String, required: true },
+    deviceType: { type: String, required: true },
+    deviceModel: { type: String, required: true },
+    location: { type: String, required: true },
+    loginDate: { type: Date, required: true },
+    timestamp: { type: Number, required: true },
 });
-const User = mongoose_1.default.model("User", userSchema);
-exports.User = User;
+const UserSchema = new mongoose_1.Schema({
+    username: { type: String, required: true },
+    email: { type: String, required: true, unique: true },
+    password: { type: String, required: true },
+    failedLoginAttempts: { type: Number, default: 0 },
+    isBlocked: { type: Boolean, default: false },
+    blockedUntil: { type: Date, default: null },
+    lastLogin: { type: Date, default: null },
+    allowedIPs: { type: [String], default: [] },
+    loginHistory: { type: [LoginHistorySchema], default: [] },
+    otpSecret: { type: String, default: null },
+    otpCreatedAt: { type: Date },
+});
+exports.User = mongoose_1.default.model("User", UserSchema);
 //# sourceMappingURL=userModel.js.map

@@ -1,25 +1,27 @@
-import { Router } from 'express';
-import { signup, signin, verify2FA, setup2FA, forgetPassword, resendOTP } from '../controllers/authController';
-import { validateSignup } from '../middlewares/validateRequest';
+import { Router } from "express";
+import {
+  signup,
+  signin,
+  ipBasedSignin,
+  setup2FA,
+  verify2FA,
+  forgetPassword,
+  resendOTP,
+  getLastLogin,
+  disable2FA
+} from "../controllers/authController";
+import { validateSignup } from "../middlewares/validateRequest";
 
 const router: Router = Router();
 
-// Signup Route
-router.post('/signup', validateSignup,signup);
-
-// Signin Route
-router.post('/signin', signin);
-
-// 2FA Setup Route
-router.post('/setup2fa', setup2FA);
-
-// 2FA Verification Route
-router.post('/verify2fa', verify2FA);
-
-// Forget Password Route
-router.post('/forgetPassword', forgetPassword);
-
-// Resend OTP Route
-router.post('/resendOTP', resendOTP);
+router.post("/signup", validateSignup, signup);
+router.post("/signin", signin);
+router.post("/ip-based-signin", ipBasedSignin);
+router.post("/setup2fa", setup2FA);
+router.post("/verify2fa", verify2FA);
+router.post("/forget-password", forgetPassword);
+router.post("/resend-otp", resendOTP);
+router.get("/last-login/:userId", getLastLogin);
+router.post("/disable-2fa", disable2FA);
 
 export default router;

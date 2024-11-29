@@ -1,39 +1,53 @@
-import mongose , {Schema, Document } from "mongoose";
+import mongoose, { Schema, Document } from "mongoose";
 
-interface IUser extends Document {
-    username : string,
-    email: string,
-    password: string,
-    otpSecret?: string,
-    lastLogin?: Date,
-    ipAddress?: string,
+interface LoginHistory {
+  ip: string;
+  os: string;
+  deviceType: string;
+  deviceModel: string;
+  location: string;
+  loginDate: Date;
+  timestamp: number;
+
 }
 
-const userSchema = new Schema<IUser>({
-    username: {
-        type: String,
-        required: true
+export interface IUser extends Document {
+  username: string;
+  email: string;
+  password: string;
+  failedLoginAttempts: number;
+  isBlocked: boolean;
+  blockedUntil: Date | null;
+  lastLogin: Date | null;
+  allowedIPs: string[];
+  loginHistory: LoginHistory[]; // Update type
+  otpSecret?: string | null;
+  otpCreatedAt?: Date;
+}
 
-    },
-    email: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    password: {
-        type: String,
-        required: true,
-    },
-    otpSecret:{
-        type: String,
-    },
-    lastLogin:{ 
-        type: Date,
-    },
-    ipAddress: {
-    type:String,
-    }
+const LoginHistorySchema: Schema = new Schema({
+  ip: { type: String, required: true },
+  os: { type: String, required: true },
+  deviceType: { type: String, required: true },
+  deviceModel: { type: String, required: true },
+  location: { type: String, required: true },
+  loginDate: { type: Date, required: true },
+  timestamp: { type: Number, required: true },
 });
 
-const User = mongose.model<IUser>("User", userSchema);
-export { User };
+const UserSchema: Schema = new Schema({
+  username: { type: String, required: true },
+  email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
+  failedLoginAttempts: { type: Number, default: 0 },
+  isBlocked: { type: Boolean, default: false },
+  blockedUntil: { type: Date, default: null },
+  lastLogin: { type: Date, default: null },
+  allowedIPs: { type: [String], default: [] },
+  loginHistory: { type: [LoginHistorySchema], default: [] },
+  otpSecret: { type: String, default: null },
+  otpCreatedAt: { type: Date },
+});
+
+export const User = mongoose.model<IUser>("User", UserSchema);
+
